@@ -18,7 +18,7 @@ import authenticate from './functions/authenticate';
 import {makeExecutableSchema} from '@graphql-tools/schema';
 import {applyMiddleware} from 'graphql-middleware';
 import {MyContext} from './types/MyContext';
-import {GraphQLError} from 'graphql';
+import {MessageResponse} from './types/MessageTypes';
 
 const app = express();
 
@@ -31,16 +31,18 @@ app.use(
 
 (async () => {
   try {
-    // TODO Create a rate limit rule instance (not WSK2 course)
-
-    // TODO Create a permissions object (not WSK2 course)
+    app.get(
+      '/',
+      (_req: express.Request, res: express.Response<MessageResponse>) => {
+        res.send({message: 'Server is running'});
+      },
+    );
 
     const schema = applyMiddleware(
       makeExecutableSchema({
         typeDefs,
         resolvers,
       }),
-      // permissions,
     );
 
     const server = new ApolloServer<MyContext>({
